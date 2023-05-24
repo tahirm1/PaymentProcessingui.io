@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://localhost:8000/Payment_Web_Page.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+  <title>Payment Page</title>
+</head>
+<body>
+  <h1>Payment Page</h1>
+  <form id="paymentForm" action="http://localhost:8000/make-payment" method="post">
+    <label for="cardNumber">Card Number:</label>
+    <input type="text" id="cardNumber" name="cardNumber" required=""><br><br>
+
+    <label for="expiryDate">Expiry Date:</label>
+    <input type="text" id="expiryDate" name="expiryDate" required=""><br><br>
+
+    <label for="cvv">CVV:</label>
+    <input type="text" id="cvv" name="cvv" required=""><br><br>
+
+    <input type="submit" value="Make Payment">
+  </form>
+
+  <script>
+    // Handle form submission
+    document.getElementById("paymentForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent default form submission
+
+      // Get form data
+      const formData = new FormData(event.target);
+
+      // Create JSON object from form data
+      const paymentData = {};
+      for (let entry of formData.entries()) {
+        paymentData[entry[0]] = entry[1];
+      }
+
+      // Send POST request to payment server
+      fetch("/make-payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(paymentData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response from the payment server
+        console.log(data); // You can customize this based on your requirements
+      })
+      .catch(error => {
+        console.error("An error occurred:", error);
+      });
+    });
+  </script>
+
+</body></html>
